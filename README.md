@@ -32,7 +32,8 @@ hermes plugins install albertocvrrbs/hermes-living-backdrop --enable
 ```
 
 Reload the page. The Webapp loads desktop plugins from the backend's disk and copies the
-`desktop/` half automatically, so nothing else is needed.
+`desktop/` half automatically. If the backdrop doesn't show up, run `hermes gateway restart` once
+so the gateway mounts the plugin's routes.
 
 ### Hermes Desktop
 
