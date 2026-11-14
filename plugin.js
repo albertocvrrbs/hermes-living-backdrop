@@ -38,41 +38,18 @@ const CSS = `
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
 
 
-/* app completa: el mismo bosque, desenfocado y tenido, detras de barras laterales, pestanas y barra de estado */
-:root[data-fondo-vivo-app] { background-color: transparent !important;
-  --ui-sidebar-surface-background: transparent !important; --ui-editor-surface-background: transparent !important;
-  --ui-chat-surface-background: transparent !important; --sidebar: transparent !important;
-  --sidebar-edge-border: rgba(255,255,255,.10) !important; --pane-tab-strip-bg: transparent !important; }
-/* el tema pinta sus variables en linea sobre <html>; por eso los !important */
-:root[data-fondo-vivo-app] body {
-  background: linear-gradient(rgba(254,245,222,.50), rgba(249,231,198,.62)), var(--fv-blur) center / cover fixed, #efc2a2 !important; }
-:root.dark[data-fondo-vivo-app] body {
-  background: linear-gradient(160deg, rgba(22,26,62,.66), rgba(30,36,80,.58) 55%, rgba(60,40,80,.62)), var(--fv-blur) center / cover fixed, #1e2450 !important; }
-/* el lado del sol: un brillo coral que entra por la orilla de cada barra */
-:root[data-fondo-vivo-app] [data-tour="sessions-sidebar"] { box-shadow: inset -1px 0 0 rgba(255,255,255,.08), inset -40px 0 60px -40px rgba(238,138,134,.28); }
-:root[data-fondo-vivo-app] [data-slot="statusbar"] { border-top: 1px solid rgba(255,255,255,.08); }
-/* elemento activo / hover del menu en vidrio coral */
-:root[data-fondo-vivo-app] [data-slot="sidebar"] [data-active="true"],
-:root[data-fondo-vivo-app] [data-slot="sidebar"] [aria-current="page"] { background: rgba(238,138,134,.20) !important; }
-:root[data-fondo-vivo-app] [data-slot="sidebar"] input { background: rgba(255,255,255,.06); border-radius: 8px; }
-
 /* vidrio esmerilado: crema cálida en claro, índigo profundo en oscuro */
 [data-fondo-vivo] { --fv-glass: rgba(254,245,222,.72); --fv-glass-edge: rgba(255,255,255,.55); --fv-shadow: 0 10px 30px -14px rgba(58,71,146,.45); }
 :root.dark [data-fondo-vivo] { --fv-glass: rgba(24,28,66,.70); --fv-glass-edge: rgba(143,220,207,.18); --fv-shadow: 0 12px 34px -12px rgba(10,12,40,.7); }
 [data-fondo-vivo] [data-slot="aui_assistant-message-content"] {
   background: var(--fv-glass); border: 1px solid var(--fv-glass-edge); border-radius: 18px;
   padding: .85rem 1.1rem; box-shadow: var(--fv-shadow);
-  backdrop-filter: blur(32px) saturate(1.5); -webkit-backdrop-filter: blur(32px) saturate(1.5);
 }
 /* burbuja del usuario: vidrio teñido de coral (el color del atardecer) */
 [data-fondo-vivo] { --fv-user: rgba(246,179,162,.55); }
 :root.dark [data-fondo-vivo] { --fv-user: rgba(124,60,90,.50); }
 [data-fondo-vivo] [data-slot="aui_user-message-root"] [class*="border-(--ui-stroke-tertiary)"] {
   background: var(--fv-user) !important; border-color: var(--fv-glass-edge) !important; box-shadow: var(--fv-shadow);
-  backdrop-filter: blur(32px) saturate(1.5); -webkit-backdrop-filter: blur(32px) saturate(1.5);
-}
-[data-fondo-vivo] [data-slot="composer-surface"] {
-  backdrop-filter: blur(32px) saturate(1.5); -webkit-backdrop-filter: blur(32px) saturate(1.5);
 }
 [data-fondo-vivo] [data-slot="composer-surface"] {
   background: var(--fv-glass) !important; border-color: var(--fv-glass-edge) !important; box-shadow: var(--fv-shadow); border-radius: 22px;
@@ -80,7 +57,28 @@ const CSS = `
 [data-fondo-vivo] [data-slot="composer-surface"] > div[aria-hidden][class*="-z-10"] { background: transparent !important; }
 [data-fondo-vivo] [data-slot="aui_assistant-message-content"] pre,
 [data-fondo-vivo] [data-slot="aui_assistant-message-content"] table { background-color: color-mix(in srgb, var(--fv-glass) 70%, transparent); }
-@media (prefers-reduced-motion: reduce) { .fv-layer video { display: none; } .fv-layer .fv-poster { opacity: 1 !important; filter: none; } }
+
+/* desenfoque: copia chica del video, escalada y recortada a la forma de cada burbuja (no depende de backdrop-filter) */
+.fv-layer canvas.fv-blur { position: absolute; inset: -2%; width: 104%; height: 104%; filter: blur(12px) saturate(1.45); opacity: 0; transition: opacity 1.4s ease; }
+.fv-layer[data-ready] canvas.fv-blur { opacity: 1; }
+:root.dark .fv-layer canvas.fv-blur { filter: blur(12px) saturate(1.4) brightness(.8); }
+
+/* estado al pie (pensando, herramientas, cargando) y avisos (skill/memoria actualizada): pastilla de vidrio */
+[data-fondo-vivo] :is([data-slot="aui_turn-activity"]:not(.sr-only), [data-slot="aui_response-loading"], [data-slot="aui_background-resume"], [data-slot="aui_system-message-root"]) {
+  width: fit-content !important; max-width: 100%; align-self: flex-start;
+  background: var(--fv-glass); border: 1px solid var(--fv-glass-edge); border-radius: 999px;
+  padding: .3rem .9rem .3rem .7rem !important; box-shadow: var(--fv-shadow);
+  animation: fv-in .45s cubic-bezier(.2,.8,.2,1) both;
+  transition: background .4s ease, box-shadow .4s ease;
+}
+[data-fondo-vivo] [data-slot="aui_system-message-root"] { margin: .35rem 0; }
+[data-fondo-vivo] .fv-swap { animation: fv-swap .42s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes fv-in { from { opacity: 0; transform: translateY(8px) scale(.98); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes fv-swap { 0% { opacity: .15; transform: translateY(5px); filter: blur(3px); } 100% { opacity: 1; transform: none; filter: none; } }
+/* las respuestas nuevas tambien entran suave */
+[data-fondo-vivo] [data-slot="aui_assistant-message-content"] { animation: fv-in .5s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { [data-fondo-vivo] *, [data-fondo-vivo] .fv-swap { animation: none !important; }
+   .fv-layer video { display: none; } .fv-layer .fv-poster { opacity: 1 !important; filter: none; } }
 `
 
 function idb() {
@@ -111,7 +109,6 @@ export default {
     style.textContent = CSS
     document.head.appendChild(style)
     setAccentOverride(ACCENT)
-    document.documentElement.setAttribute('data-fondo-vivo-app', '')
 
     const layers = new Set()
     function mount(surface) {
@@ -127,7 +124,8 @@ export default {
       v.addEventListener('playing', () => layer.setAttribute('data-ready', ''), { once: true })
       const veil = document.createElement('div'); veil.className = 'fv-veil'
       const grain = document.createElement('div'); grain.className = 'fv-grain'
-      layer.append(img, v, veil, grain)
+      const blur = document.createElement('canvas'); blur.className = 'fv-blur'; blur.width = 384; blur.height = 216
+      layer.append(img, v, veil, grain, blur)
       surface.prepend(layer)
       layers.add(layer)
       if (videoUrl) { v.src = videoUrl; v.play().catch(() => {}) }
@@ -137,6 +135,49 @@ export default {
     mo.observe(document.body, { childList: true, subtree: true })
     scan()
 
+
+    // cada cuadro: copia el video al canvas chico y lo recorta a la union de burbujas visibles
+    const SEL = '[data-slot="aui_assistant-message-content"], [data-slot="aui_user-message-root"] [class*="border-(--ui-stroke-tertiary)"], [data-slot="composer-surface"], [data-slot="aui_turn-activity"]:not(.sr-only), [data-slot="aui_response-loading"], [data-slot="aui_background-resume"], [data-slot="aui_system-message-root"]'
+    const rr = (x, y, w, h, r) => { r = Math.min(r, w / 2, h / 2); return `M${x + r},${y}H${x + w - r}A${r},${r} 0 0 1 ${x + w},${y + r}V${y + h - r}A${r},${r} 0 0 1 ${x + w - r},${y + h}H${x + r}A${r},${r} 0 0 1 ${x},${y + h - r}V${y + r}A${r},${r} 0 0 1 ${x + r},${y}Z` }
+    let raf = 0
+    function tick() {
+      raf = requestAnimationFrame(tick)
+      if (document.hidden) return
+      layers.forEach(l => {
+        const v = l.querySelector('video'), c = l.querySelector('canvas.fv-blur')
+        if (!v || !c || !l.isConnected) return
+        if (v.readyState >= 2) { const g = c._g || (c._g = c.getContext('2d')); try { g.drawImage(v, 0, 0, c.width, c.height) } catch {} }
+        const surf = l.parentElement, cb = c.getBoundingClientRect()
+        const port = surf.querySelector('[data-slot="aui_thread-viewport"]') || surf.querySelector('[data-slot="composer-bounds"]')
+        const pb = port ? port.getBoundingClientRect() : cb
+        let d = ''
+        surf.querySelectorAll(SEL).forEach(el => {
+          const b = el.getBoundingClientRect(), comp = el.matches('[data-slot="composer-surface"]')
+          // lo que el hilo ya recorto por scroll no lleva desenfoque
+          const top = comp ? b.top : Math.max(b.top, pb.top), bot = comp ? b.bottom : Math.min(b.bottom, pb.bottom)
+          if (b.width < 2 || bot - top < 2) return
+          const r = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 12
+          d += rr(b.left - cb.left, top - cb.top, b.width, bot - top, r)
+        })
+        const clip = d ? `path("${d}")` : 'inset(50%)'
+        if (c._clip !== clip) { c.style.clipPath = clip; c._clip = clip }
+      })
+    }
+    raf = requestAnimationFrame(tick)
+
+    // transicion cuando cambia el texto del estado al pie
+    const swapMo = new MutationObserver(muts => {
+      for (const m of muts) {
+        const el = (m.target.nodeType === 3 ? m.target.parentElement : m.target)?.closest?.('[data-slot="aui_turn-activity"], [data-slot="aui_response-loading"], [data-slot="aui_background-resume"]')
+        if (!el || el._fvBusy) continue
+        const key = (el.textContent || '').replace(/[\d.,:]+/g, '#').trim()
+        if (key === el._fvKey) continue
+        el._fvKey = key; el._fvBusy = true
+        requestAnimationFrame(() => { el.classList.remove('fv-swap'); void el.offsetWidth; el.classList.add('fv-swap'); el._fvBusy = false })
+      }
+    })
+    swapMo.observe(document.body, { characterData: true, childList: true, subtree: true })
+
     // ahorra GPU/CPU: pausa cuando la ventana no se ve
     const onVis = () => layers.forEach(l => { const v = l.querySelector('video'); if (!v || !v.src) return; document.hidden ? v.pause() : v.play().catch(() => {}) })
     document.addEventListener('visibilitychange', onVis)
@@ -145,7 +186,6 @@ export default {
       try {
         const meta = await ctx.rest('/meta', { timeoutMs: 20000 })
         poster = meta.poster || ''
-        if (meta.blur) document.documentElement.style.setProperty('--fv-blur', `url("${meta.blur}")`)
         layers.forEach(l => { const i = l.querySelector('.fv-poster'); if (i && poster) i.src = poster })
         let blob = null
         const hit = await idbGet(meta.version).catch(() => null)
@@ -171,12 +211,12 @@ export default {
     ctx.onDispose(() => {
       disposed = true
       mo.disconnect()
+      swapMo.disconnect()
+      cancelAnimationFrame(raf)
       document.removeEventListener('visibilitychange', onVis)
       layers.forEach(l => { const v = l.querySelector('video'); if (v) { v.pause(); v.removeAttribute('src'); v.load() } l.remove() })
       document.querySelectorAll('[data-fondo-vivo]').forEach(s => s.removeAttribute('data-fondo-vivo'))
       style.remove()
-      document.documentElement.removeAttribute('data-fondo-vivo-app')
-      document.documentElement.style.removeProperty('--fv-blur')
       setAccentOverride(null)
       if (videoUrl) URL.revokeObjectURL(videoUrl)
     })
