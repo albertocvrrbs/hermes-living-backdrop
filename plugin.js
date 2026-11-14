@@ -9,7 +9,7 @@ const ACCENT = '#ee8a86'
 const DB = 'fondo-vivo', STORE = 'video'
 
 const CSS = `
-[data-chat-surface][data-fondo-vivo] { --ui-chat-surface-background: transparent; background: transparent !important; }
+[data-chat-surface][data-fondo-vivo] { --ui-chat-surface-background: transparent !important; background: transparent !important; }
 [data-chat-surface][data-fondo-vivo] [data-slot="composer-bounds"] { background: transparent !important; }
 .fv-layer { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #3a4792; }
 .fv-layer video, .fv-layer .fv-poster {
@@ -40,8 +40,10 @@ const CSS = `
 
 /* app completa: el mismo bosque, desenfocado y tenido, detras de barras laterales, pestanas y barra de estado */
 :root[data-fondo-vivo-app] { background-color: transparent !important;
-  --ui-sidebar-surface-background: transparent; --ui-editor-surface-background: transparent; --ui-chat-surface-background: transparent;
-  --sidebar-edge-border: rgba(255,255,255,.10); --pane-tab-strip-bg: transparent; }
+  --ui-sidebar-surface-background: transparent !important; --ui-editor-surface-background: transparent !important;
+  --ui-chat-surface-background: transparent !important; --sidebar: transparent !important;
+  --sidebar-edge-border: rgba(255,255,255,.10) !important; --pane-tab-strip-bg: transparent !important; }
+/* el tema pinta sus variables en linea sobre <html>; por eso los !important */
 :root[data-fondo-vivo-app] body {
   background: linear-gradient(rgba(254,245,222,.50), rgba(249,231,198,.62)), var(--fv-blur) center / cover fixed, #efc2a2 !important; }
 :root.dark[data-fondo-vivo-app] body {
