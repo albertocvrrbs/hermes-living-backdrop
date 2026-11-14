@@ -1,0 +1,7 @@
+# Living Backdrop: an animated pastel-forest loop behind the Hermes chat.
+# dashboard/ serves the video; desktop/plugin.js mounts it and restyles the chat.
+name: living-backdrop
+label: Living Backdrop
+description: An animated, hand-drawn pastel landscape behind your Hermes chat, with frosted-glass messages that blend into it.
+version: 1.0.0
+manifest_version: 1

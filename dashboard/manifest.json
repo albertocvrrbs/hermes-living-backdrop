@@ -1,0 +1,7 @@
+{
+  "name": "living-backdrop",
+  "label": "Living Backdrop",
+  "description": "Serves the background loop to the living-backdrop desktop plugin.",
+  "version": "1.0.0",
+  "api": "plugin_api.py"
+}
